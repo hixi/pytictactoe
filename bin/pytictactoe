@@ -2,14 +2,16 @@
 import os
 import sys, signal, argparse, logging
 
+from pytictactoe.player.clever_player import CleverPlayer
 from pytictactoe.player.cli_player import CliPlayer
+from pytictactoe.player.defensive_player import DefensivePlayer
 from pytictactoe.player.random_player import RandomPlayer
 from pytictactoe.tournament import Tournament
 
 
 def start_tournament(rounds, rl, model_path):
     tournament = Tournament(rounds=rounds)
-    cli_player = CliPlayer()
+    cli_player = DefensivePlayer()
     if rl:
         from reinforcement_learning.rl_player import RlPlayer
         from reinforcement_learning.model import build_model
@@ -46,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--rounds', dest='rounds', type=int, help='Tournament rounds')
     parser.add_argument('-m', '--model_path', dest='model_path', help='Tournament rounds')
     parser.add_argument('--rl', dest='rl', action='store_true')
-    parser.set_defaults(rounds=5, rl=False,
+    parser.set_defaults(rounds=10000, rl=False,
                         model_path=parent_dir + '/reinforcement_learning/weights/rl_model_tictactoe.h5')
     args = parser.parse_args()
     start_tournament(args.rounds, args.rl, args.model_path)
