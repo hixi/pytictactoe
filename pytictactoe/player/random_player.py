@@ -1,5 +1,6 @@
 import random
 
+from pytictactoe.field import Field
 from pytictactoe.player.base_player import BasePlayer
 
 
@@ -7,11 +8,7 @@ class RandomPlayer(BasePlayer):
     def choose_field(self, grid):
         allowed = False
         while not allowed:
-            x, y = random_choice()
-            allowed = yield x, y
+            field = Field(x=random.randint(0, 2), y=random.randint(0, 2))
+            allowed = yield field
             if allowed:
                 yield None
-
-
-def random_choice():
-    return random.randint(0, 2), random.randint(0, 2)

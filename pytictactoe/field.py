@@ -1,3 +1,3 @@
-from enum import Enum
+from collections import namedtuple
 
-Field = Enum('Field', ['EMPTY', 'X', 'O'])
+Field = namedtuple('Field', ['x', 'y'])

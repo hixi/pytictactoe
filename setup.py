@@ -4,14 +4,14 @@ with open('README.md') as f:
     readme = f.read()
 
     setup(
-        name='pyschieber',
+        name='pytictactoe',
         version='1.0.1',
-        description='pyschieber is a terminal application of the popular swiss card game Schieber and provides an API to the game',
+        description='A Tic-Tac-Toe playground for reinforcement learning.',
         long_description=readme,
         author='Samuel Kurath',
         author_email='samuel.kurath@gmail.com',
-        url='https://github.com/Murthy10/pyschieber',
+        url='https://github.com/Murthy10/pytictactoe',
         license='MIT',
         packages=find_packages(exclude=('tests', 'docs')),
-        scripts=['bin/pyschieber'],
+        scripts=['bin/pytictactoe'],
     )
