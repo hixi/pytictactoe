@@ -1,4 +1,5 @@
 import logging
+import random
 
 from pytictactoe.grid import Grid
 
@@ -11,8 +12,9 @@ class Game:
         self.grid = Grid()
 
     def start(self):
+        start_player = random.randint(0, 1)
         for i in range(9):
-            player = self.players[i % 2]
+            player = self.players[(i + start_player) % 2]
             self.choose(player=player)
             if self.won(player=player):
                 return player
