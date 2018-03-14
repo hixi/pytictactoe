@@ -35,10 +35,11 @@ class RlPlayer(BasePlayer):
                 target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
             target_f = self.model.predict(state)
             target_f[0][action] = target
-            history = self.model.fit(state,target_f, epochs=1,verbose=0)
+            history = self.model.fit(state, target_f, epochs=1, verbose=0)
             self.loss += history.history['loss']
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+        self.memories = []
 
     def choose_field(self, grid):
         allowed = False

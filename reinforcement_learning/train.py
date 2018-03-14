@@ -55,6 +55,6 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--log_dir', dest='log_dir', help='Tensorboard log directory')
     parser.add_argument('-e', '--nr_episodes', dest='nr_episodes', help='Number of episodes to play', type=int)
     parser.add_argument('-r', '--rounds', dest='rounds', help='Rounds to play of a tournament', type=int)
-    parser.set_defaults(log_dir=dir_path + '/weights', nr_episodes=1, rounds=5000)
+    parser.set_defaults(log_dir=dir_path + '/weights', nr_episodes=10, rounds=1000)
     args = parser.parse_args()
     run(log_dir=args.log_dir, episodes=args.nr_episodes, rounds=args.rounds)
