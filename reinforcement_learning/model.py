@@ -4,7 +4,7 @@ from keras.layers import Dense
 from keras.optimizers import Adam
 from keras.models import Sequential
 
-from reinforcment_learning.input_handler import input_size, output_size
+from reinforcement_learning.input_handler import input_size, output_size
 
 
 def build_model(model_path, learning_rate=0.001):

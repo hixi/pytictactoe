@@ -1,11 +1,12 @@
+import os
 import argparse
 
 import matplotlib.pyplot as plt
 
 from pytictactoe.tournament import Tournament
 from pytictactoe.player.random_player import RandomPlayer
-from reinforcment_learning.model import build_model
-from reinforcment_learning.rl_player import RlPlayer
+from reinforcement_learning.model import build_model
+from reinforcement_learning.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds):
@@ -49,10 +50,11 @@ def print_loss(player_loss):
 
 
 if __name__ == "__main__":
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     parser = argparse.ArgumentParser(description='SieberJassBot', )
     parser.add_argument('-l', '--log_dir', dest='log_dir', help='Tensorboard log directory')
     parser.add_argument('-e', '--nr_episodes', dest='nr_episodes', help='Number of episodes to play', type=int)
     parser.add_argument('-r', '--rounds', dest='rounds', help='Rounds to play of a tournament', type=int)
-    parser.set_defaults(log_dir='/pytictactoe', nr_episodes=2, rounds=2000)
+    parser.set_defaults(log_dir=dir_path + '/weights', nr_episodes=2, rounds=2000)
     args = parser.parse_args()
     run(log_dir=args.log_dir, episodes=args.nr_episodes, rounds=args.rounds)

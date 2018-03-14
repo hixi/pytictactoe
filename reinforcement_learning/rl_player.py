@@ -2,7 +2,7 @@ import numpy as np
 
 from pytictactoe.player.base_player import BasePlayer
 
-from reinforcment_learning.input_handler import get_input_state, index_to_field
+from reinforcement_learning.input_handler import get_input_state, index_to_field
 
 
 class RlPlayer(BasePlayer):

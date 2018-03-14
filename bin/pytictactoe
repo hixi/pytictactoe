@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import os
 import sys, signal, argparse, logging
 
 from pytictactoe.player.cli_player import CliPlayer
@@ -7,12 +7,18 @@ from pytictactoe.player.random_player import RandomPlayer
 from pytictactoe.tournament import Tournament
 
 
-# TODO: Change to pytictactoe
-def start_tournament(rounds):
+def start_tournament(rounds, rl, model_path):
     tournament = Tournament(rounds=rounds)
     cli_player = CliPlayer()
+    if rl:
+        from reinforcement_learning.rl_player import RlPlayer
+        from reinforcement_learning.model import build_model
+        model = build_model(model_path=model_path)
+        opponent = RlPlayer(model=model)
+    else:
+        opponent = RandomPlayer()
     tournament.register_player(cli_player)
-    tournament.register_player(RandomPlayer())
+    tournament.register_player(opponent)
     tournament.play()
 
 
@@ -33,9 +39,14 @@ def handler(signum, frame):
 
 if __name__ == "__main__":
     set_logging()
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    parent_dir = os.path.abspath(os.path.join(dir_path, os.pardir))
     signal.signal(signal.SIGINT, handler)
     parser = argparse.ArgumentParser(description='CLI pytictactoe', )
     parser.add_argument('-r', '--rounds', dest='rounds', type=int, help='Tournament rounds')
-    parser.set_defaults(rounds=5)
+    parser.add_argument('-m', '--model_path', dest='model_path', help='Tournament rounds')
+    parser.add_argument('--rl', dest='rl', action='store_true')
+    parser.set_defaults(rounds=5, rl=False,
+                        model_path=parent_dir + '/reinforcement_learning/weights/rl_model_tictactoe.h5')
     args = parser.parse_args()
-    start_tournament(args.rounds)
+    start_tournament(args.rounds, args.rl, args.model_path)
