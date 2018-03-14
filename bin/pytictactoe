@@ -2,7 +2,6 @@
 import os
 import sys, signal, argparse, logging
 
-from pytictactoe.player.clever_player import CleverPlayer
 from pytictactoe.player.cli_player import CliPlayer
 from pytictactoe.player.defensive_player import DefensivePlayer
 from pytictactoe.player.random_player import RandomPlayer
