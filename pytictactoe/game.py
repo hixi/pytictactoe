@@ -6,21 +6,17 @@ logger = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self):
-        self.players = []
+    def __init__(self, players):
+        self.players = players
         self.grid = Grid()
 
-    def register(self, player):
-        self.players.append(player)
-        assert len(self.players) <= 2
-
     def start(self):
-        start_player_index = 0
-        has_won = False
-        while not has_won:
-            player = self.players[start_player_index % 2]
+        for i in range(9):
+            player = self.players[i % 2]
             self.choose(player=player)
-            has_won = self.won(player=player)
+            if self.won(player=player):
+                return player
+        return None
 
     def choose(self, player):
         is_allowed_field = False
@@ -41,3 +37,4 @@ class Game:
                 if all(entry == player.field_type for entry in w):
                     return True
         return False
+

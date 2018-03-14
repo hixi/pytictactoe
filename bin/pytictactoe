@@ -2,17 +2,17 @@
 
 import sys, signal, argparse, logging
 
-from pyschieber.player.cli_player import CliPlayer
-from pyschieber.player.random_player import RandomPlayer
-from pyschieber.tournament import Tournament
+from pytictactoe.player.cli_player import CliPlayer
+from pytictactoe.player.random_player import RandomPlayer
+from pytictactoe.tournament import Tournament
 
 
 # TODO: Change to pytictactoe
-def start_tournament(points):
-    tournament = Tournament(point_limit=points)
+def start_tournament(rounds):
+    tournament = Tournament(rounds=rounds)
     cli_player = CliPlayer(name='CliPlayer')
     tournament.register_player(cli_player)
-    [tournament.register_player(RandomPlayer(name=str(i))) for i in range(2, 5)]
+    tournament.register(RandomPlayer())
     tournament.play()
 
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     set_logging()
     signal.signal(signal.SIGINT, handler)
     parser = argparse.ArgumentParser(description='CLI pytictactoe', )
-    parser.add_argument('-p', '--points', dest='points', type=int, help='Tournament points')
-    parser.set_defaults(points=1500)
+    parser.add_argument('-r', '--rounds', dest='rounds', type=int, help='Tournament rounds')
+    parser.set_defaults(rounds=5)
     args = parser.parse_args()
-    start_tournament(args.points)
+    start_tournament(args.rounds)
