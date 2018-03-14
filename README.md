@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Murthy10/pyschieber.svg?branch=master)](https://travis-ci.org/Murthy10/pyschieber)
+[![Build Status](https://travis-ci.org/Murthy10/pytictactoe.svg?branch=master)](https://travis-ci.org/Murthy10/pytictactoe)
 <a href="url"><img src="/docs/images/jasskarten.gif" align="right" width="300" ></a>
 # pytictactoe
 Pytictactoe is an implementation of the well known Tic-Tac-Toe game.
