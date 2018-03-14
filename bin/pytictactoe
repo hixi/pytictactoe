@@ -2,6 +2,7 @@
 import os
 import sys, signal, argparse, logging
 
+from pytictactoe.player.clever_player import CleverPlayer
 from pytictactoe.player.cli_player import CliPlayer
 from pytictactoe.player.defensive_player import DefensivePlayer
 from pytictactoe.player.random_player import RandomPlayer
@@ -10,14 +11,14 @@ from pytictactoe.tournament import Tournament
 
 def start_tournament(rounds, rl, model_path):
     tournament = Tournament(rounds=rounds)
-    cli_player = DefensivePlayer()
+    cli_player = RandomPlayer()
     if rl:
         from reinforcement_learning.rl_player import RlPlayer
         from reinforcement_learning.model import build_model
         model = build_model(model_path=model_path)
         opponent = RlPlayer(model=model)
     else:
-        opponent = RandomPlayer()
+        opponent = CleverPlayer()
     tournament.register_player(cli_player)
     tournament.register_player(opponent)
     tournament.play()
