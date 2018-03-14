@@ -5,7 +5,7 @@ with open('README.md') as f:
 
     setup(
         name='pytictactoe',
-        version='1.0.1',
+        version='0.5.0',
         description='A Tic-Tac-Toe playground for reinforcement learning.',
         long_description=readme,
         author='Samuel Kurath',
