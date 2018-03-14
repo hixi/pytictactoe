@@ -31,7 +31,7 @@ class Tournament:
             logger.info('-' * 200)
             winner = game.start()
             self.update_statistic(winner)
-            logger.info('Round {} is over.'.format(len(self.games)))
+            logger.info('\nRound {} is over.'.format(len(self.games)))
             logger.info('Points: Player 1: {0} , Player 2: {1}, Remis: {2}. \n'.format(self.statistic['players'][0],
                                                                                        self.statistic['players'][1],
                                                                                        self.statistic['remis']))

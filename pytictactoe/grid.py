@@ -26,14 +26,14 @@ class Grid:
         ]
 
     def set_field(self, field, field_type):
-        if self.fields[field.x][field.y] == FieldType.EMPTY:
-            self.fields[field.x][field.y] = field_type
+        if self.fields[field.y][field.x] == FieldType.EMPTY:
+            self.fields[field.y][field.x] = field_type
             return True
         else:
             return False
 
     def __str__(self):
-        field_string = '    0   1   2\n'
+        field_string = '\n    0   1   2\n'
         field_string += '  ' + '-' * 13 + '\n'
         for i, row in enumerate(self.fields):
             field_string += '{} '.format(i)
