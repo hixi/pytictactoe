@@ -23,8 +23,8 @@ class Game:
         generator = player.choose_field(grid=self.grid)
         chosen_field = next(generator)
         while not is_allowed_field:
-            is_allowed_card = self.grid.set_field(field=chosen_field, field_type=player.field_type)
-            field = generator.send(is_allowed_card)
+            is_allowed_field = self.grid.set_field(field=chosen_field, field_type=player.field_type)
+            field = generator.send(is_allowed_field)
             chosen_field = chosen_field if field is None else field
         else:
             logger.info('{0}:({1}/{2})'.format(player, chosen_field.x, chosen_field.y))

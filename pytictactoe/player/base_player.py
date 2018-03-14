@@ -1,7 +1,5 @@
 import inspect
 
-from pytictactoe.field_type import FieldType
-
 
 class BasePlayer:
     def __init__(self):

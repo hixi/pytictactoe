@@ -13,16 +13,13 @@ class Tournament:
         self.games = []
         self.statistic = dict(players=[0, 0], remis=0)
 
-    def register(self, player):
+    def register_player(self, player):
         assert len(self.players) < 2
         player.field_type = self._get_field_type()
         self.players.append(player)
 
     def _get_field_type(self):
         return FieldType.O if len(self.players) else FieldType.X
-
-    def register_player(self, player):
-        self.players.append(player)
 
     def play(self):
         logger.info('Tournament starts, there are {} rounds to play.'.format(self.rounds))

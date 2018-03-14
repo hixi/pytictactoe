@@ -31,3 +31,14 @@ class Grid:
             return True
         else:
             return False
+
+    def __str__(self):
+        field_string = '    0   1   2\n'
+        field_string += '  ' + '-' * 13 + '\n'
+        for i, row in enumerate(self.fields):
+            field_string += '{} '.format(i)
+            for field in row:
+                field_content = ' ' if field == FieldType.EMPTY else field.name
+                field_string += '| {} '.format(field_content)
+            field_string += '|\n' + '  ' + '-' * 13 + '\n'
+        return field_string

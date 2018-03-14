@@ -10,9 +10,9 @@ from pytictactoe.tournament import Tournament
 # TODO: Change to pytictactoe
 def start_tournament(rounds):
     tournament = Tournament(rounds=rounds)
-    cli_player = CliPlayer(name='CliPlayer')
+    cli_player = CliPlayer()
     tournament.register_player(cli_player)
-    tournament.register(RandomPlayer())
+    tournament.register_player(RandomPlayer())
     tournament.play()
 
 
