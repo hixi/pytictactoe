@@ -33,5 +33,11 @@ class Game:
         for winning_state in winning_states:
             for w in winning_state:
                 if all(entry == player.field_type for entry in w):
+                    after_decision_information(player=player, won=True, grid=self.grid)
                     return True
+        after_decision_information(player=player, won=False, grid=self.grid)
         return False
+
+
+def after_decision_information(player, won, grid):
+    player.after_decision(won=won, grid=grid)

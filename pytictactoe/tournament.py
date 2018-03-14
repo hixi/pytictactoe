@@ -11,7 +11,7 @@ class Tournament:
         self.rounds = rounds
         self.players = []
         self.games = []
-        self.statistic = dict(players=[0, 0], remis=0)
+        self.statistic = None
 
     def register_player(self, player):
         assert len(self.players) < 2
@@ -22,6 +22,7 @@ class Tournament:
         return FieldType.O if len(self.players) else FieldType.X
 
     def play(self):
+        self.init_statistic()
         logger.info('Tournament starts, there are {} rounds to play.'.format(self.rounds))
         for i in range(self.rounds):
             game = Game(players=self.players)
@@ -36,7 +37,6 @@ class Tournament:
                                                                                        self.statistic['players'][1],
                                                                                        self.statistic['remis']))
         logger.info('{0} won! \n'.format(self.tournament_winner()))
-        self.reset()
 
     def update_statistic(self, winner):
         if winner is None:
@@ -47,5 +47,5 @@ class Tournament:
     def tournament_winner(self):
         return self.players[self.statistic['players'].index(max(self.statistic['players']))]
 
-    def reset(self):
-        self.games = []
+    def init_statistic(self):
+        self.statistic = dict(players=[0, 0], remis=0)
