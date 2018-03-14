@@ -9,9 +9,12 @@ Pytictactoe aims to offer an API in the same manner.
 
 
 ## Usage
-To install pyschieber, simply:
+To install pytictactoe, simply:
 ```bash
-pip install pytictactoe
+git clone https://github.com/Murthy10/pytictactoe.git
+cd pytictactoe
+pip install -r requirements.txt
+python setup.py install
 ```
 pyschieber officially supports Python 3.4, 3.5, 3.6, 3.7, 3.5-dev, 3.6-dev, 3.7-dev, nightly and PyPy3.
 
