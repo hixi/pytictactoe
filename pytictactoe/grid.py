@@ -1,3 +1,4 @@
+from pytictactoe.field import Field
 from pytictactoe.field_type import FieldType
 
 
@@ -34,6 +35,14 @@ class Grid:
 
     def get_field(self, x, y):
         return self.fields[y][x]
+
+    def get_empty_fields(self):
+        empty_fields = []
+        for r, row in enumerate(self.fields):
+            for f, field in enumerate(row):
+                if field == FieldType.EMPTY:
+                    empty_fields.append(Field(x=f, y=r))
+        return empty_fields
 
     def __str__(self):
         field_string = '\n    0   1   2\n'
