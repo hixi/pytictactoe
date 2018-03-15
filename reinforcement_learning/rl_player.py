@@ -56,7 +56,17 @@ class RlPlayer(BasePlayer):
                 index += 1
 
     def after_decision(self, grid, won):
-        reward, done = (1., True) if won else (0., False)
+        done = True if won is not None else False
+        reward = calculate_reward(won)
         next_state = get_input_state(grid=grid)
         self.remember(state=self.current_state, action=self.current_action, reward=reward, next_state=next_state,
                       done=done)
+
+
+def calculate_reward(won):
+    if won:
+        return 1
+    if won is None:
+        return 0.
+    if not won:
+        return -1.

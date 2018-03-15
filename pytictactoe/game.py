@@ -17,6 +17,7 @@ class Game:
             player = self.players[(i + start_player) % 2]
             self.choose(player=player)
             if self.won(player=player):
+                after_decision_information(player=self.players[(i + start_player + 1) % 2], won=False, grid=self.grid)
                 return player
         return None
 
@@ -37,7 +38,7 @@ class Game:
                 if all(entry == player.field_type for entry in w):
                     after_decision_information(player=player, won=True, grid=self.grid)
                     return True
-        after_decision_information(player=player, won=False, grid=self.grid)
+        after_decision_information(player=player, won=None, grid=self.grid)
         return False
 
 
