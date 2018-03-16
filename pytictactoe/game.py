@@ -1,6 +1,7 @@
 import logging
 import random
 
+from pytictactoe.game_state import GameState
 from pytictactoe.grid import Grid
 
 logger = logging.getLogger(__name__)
@@ -16,9 +17,15 @@ class Game:
         for i in range(9):
             player = self.players[(i + start_player) % 2]
             self.choose(player=player)
-            if self.won(player=player):
-                after_decision_information(player=self.players[(i + start_player + 1) % 2], won=False, grid=self.grid)
+            if self.won(player=player) == GameState.WON:
+                after_decision_information(player=player, game_state=GameState.WON, grid=self.grid)
+                after_decision_information(player=self.players[(i + start_player + 1) % 2], game_state=GameState.LOST,
+                                           grid=self.grid)
                 return player
+            if i < 8:
+                after_decision_information(player=player, game_state=GameState.ONGOING, grid=self.grid)
+        for player in self.players:
+            after_decision_information(player=player, game_state=GameState.REMI, grid=self.grid)
         return None
 
     def choose(self, player):
@@ -36,11 +43,9 @@ class Game:
         for winning_state in winning_states:
             for w in winning_state:
                 if all(entry == player.field_type for entry in w):
-                    after_decision_information(player=player, won=True, grid=self.grid)
-                    return True
-        after_decision_information(player=player, won=None, grid=self.grid)
-        return False
+                    return GameState.WON
+        return None
 
 
-def after_decision_information(player, won, grid):
-    player.after_decision(won=won, grid=grid)
+def after_decision_information(player, game_state, grid):
+    player.after_decision(game_state=game_state, grid=grid)

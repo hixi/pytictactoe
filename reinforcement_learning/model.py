@@ -9,10 +9,9 @@ from reinforcement_learning.input_handler import input_size, output_size
 
 def build_model(model_path, learning_rate=0.001):
     model = Sequential()
-    model.add(Dense(35, input_shape=(input_size,), activation='relu'))
-    model.add(Dense(70, activation='relu'))
-    model.add(Dense(49, activation='relu'))
-    model.add(Dense(28, activation='relu'))
+    model.add(Dense(54, input_shape=(input_size,), activation='relu'))
+    model.add(Dense(72, activation='relu'))
+    model.add(Dense(35, activation='relu'))
     model.add(Dense(output_size, activation='linear'))
     model.compile(loss='mse', optimizer=Adam(lr=learning_rate))
     load_model(model, model_path)

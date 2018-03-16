@@ -1,6 +1,8 @@
+import random
 import numpy as np
 
 from pytictactoe.player.base_player import BasePlayer
+from pytictactoe.game_state import GameState
 
 from reinforcement_learning.input_handler import get_input_state, index_to_field
 
@@ -11,15 +13,20 @@ class RlPlayer(BasePlayer):
         self.memories = []
         self.model = model
         self.gamma = 0.95  # discount rate
-        self.epsilon = 1.0  # exploration rate
+        self.epsilon = 0.95  # exploration rate
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
         self.learning_rate = 0.001
         self.current_state = None
         self.current_action = None
         self.loss = []
+        self.penalty = 0.
 
     def act(self, input_state):
+        # if random.uniform(0, 1) >= self.epsilon:
+        #    random_list = [i for i in range(9)]
+        #   random.shuffle(random_list)
+        #   return np.array(random_list)
         act_values = self.model.predict(np.expand_dims(input_state, axis=0))
         return np.argsort(act_values[0])[::-1]
 
@@ -45,6 +52,7 @@ class RlPlayer(BasePlayer):
         allowed = False
         index = 0
         self.current_state = get_input_state(grid=grid)
+        self.penalty = 0.
         while not allowed:
             predictions = self.act(input_state=self.current_state)
             self.current_action = predictions[index]
@@ -54,19 +62,22 @@ class RlPlayer(BasePlayer):
                 yield None
             else:
                 index += 1
+                self.penalty = -1.
 
-    def after_decision(self, grid, won):
-        done = True if won is not None else False
-        reward = calculate_reward(won)
+    def after_decision(self, grid, game_state):
+        done = True if game_state is not GameState.ONGOING else False
+        reward = calculate_reward(game_state) + self.penalty
         next_state = get_input_state(grid=grid)
         self.remember(state=self.current_state, action=self.current_action, reward=reward, next_state=next_state,
                       done=done)
 
 
-def calculate_reward(won):
-    if won:
-        return 1
-    if won is None:
-        return 0.
-    if not won:
+def calculate_reward(game_state):
+    if game_state == GameState.WON:
+        return 1.
+    if game_state == GameState.LOST:
         return -1.
+    if game_state == GameState.REMI:
+        return 0.5
+    if game_state == GameState.ONGOING:
+        return 0.

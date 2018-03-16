@@ -8,7 +8,7 @@ class BasePlayer:
     def choose_field(self, grid):
         raise NotImplementedError(str(inspect.stack()[1][3]))
 
-    def after_decision(self, grid, won):
+    def after_decision(self, grid, game_state):
         pass
 
     def __str__(self):

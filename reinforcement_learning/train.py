@@ -27,8 +27,7 @@ def run(log_dir, episodes, rounds):
         won_player_2 += tournament.statistic['players'][1]
         remis += tournament.statistic['remis']
         print_stats(won_player_1, won_player_2, remis)
-
-    model.save_weights(model_path)
+        model.save_weights(model_path)
     print_loss(rl_player.loss)
 
 
