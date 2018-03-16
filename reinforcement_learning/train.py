@@ -15,7 +15,7 @@ def run(log_dir, episodes, rounds):
     rl_player = RlPlayer(model_path=model_path, rounds=rounds)
     opponent = RandomPlayer()
     #opponent = DefensivePlayer()
-    #opponent = CleverPlayer()
+    #dopponent = CleverPlayer()
     #opponent = RlPlayer(model=build_model(model_path=model_path))
     tournament = Tournament(rounds=rounds)
     tournament.register_player(rl_player)
