@@ -31,7 +31,6 @@ class DefensivePlayer(BasePlayer):
         defense_list = self.find_best_field(grid)
         random.shuffle(defense_list)
         if len(defense_list) > 0:
-            print(len(defense_list))
             allowed = False
             while not allowed:
                 field = defense_list.pop()

@@ -25,6 +25,7 @@ def get_input_state(grid):
             set_input_state_field(input_state=input_state, offset=pos_o_fields, i=i)
     return input_state
 
+
 def set_input_state_field(input_state, offset, i):
     input_state[offset + i] = 1.
 

@@ -5,18 +5,21 @@ import matplotlib.pyplot as plt
 
 from pytictactoe.tournament import Tournament
 from pytictactoe.player.random_player import RandomPlayer
-from reinforcement_learning.model import build_model
+from pytictactoe.player.defensive_player import DefensivePlayer
+from pytictactoe.player.clever_player import CleverPlayer
 from reinforcement_learning.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds):
     model_path = log_dir + '/rl_model_tictactoe.h5'
-    model = build_model(model_path=model_path)
-    rl_player = RlPlayer(model=model)
-    random_player = RandomPlayer()
+    rl_player = RlPlayer(model_path=model_path, rounds=rounds)
+    opponent = RandomPlayer()
+    #opponent = DefensivePlayer()
+    #opponent = CleverPlayer()
+    #opponent = RlPlayer(model=build_model(model_path=model_path))
     tournament = Tournament(rounds=rounds)
     tournament.register_player(rl_player)
-    tournament.register_player(random_player)
+    tournament.register_player(opponent)
     won_player_1 = 0
     won_player_2 = 0
     remis = 0
@@ -27,7 +30,7 @@ def run(log_dir, episodes, rounds):
         won_player_2 += tournament.statistic['players'][1]
         remis += tournament.statistic['remis']
         print_stats(won_player_1, won_player_2, remis)
-        model.save_weights(model_path)
+        rl_player.model.save_weights(model_path)
     print_loss(rl_player.loss)
 
 
