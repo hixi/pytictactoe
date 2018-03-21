@@ -14,46 +14,49 @@ def run(log_dir, episodes, rounds):
     model_path = log_dir + '/rl_model_tictactoe.h5'
     rl_player = RlPlayer(model_path=model_path, rounds=rounds)
     opponent = RandomPlayer()
-    #opponent = DefensivePlayer()
-    #dopponent = CleverPlayer()
-    #opponent = RlPlayer(model=build_model(model_path=model_path))
+    # opponent = DefensivePlayer()
+    # dopponent = CleverPlayer()
+    # opponent = RlPlayer(model_path=log_dir + '/rl_model_tictactoe_good.h5')
     tournament = Tournament(rounds=rounds)
     tournament.register_player(rl_player)
     tournament.register_player(opponent)
-    won_player_1 = 0
-    won_player_2 = 0
-    remis = 0
+    won1 = []
+    won2 = []
+    remis = []
     for e in range(episodes):
         tournament.play()
         rl_player.replay()
-        won_player_1 += tournament.statistic['players'][0]
-        won_player_2 += tournament.statistic['players'][1]
-        remis += tournament.statistic['remis']
-        print_stats(won_player_1, won_player_2, remis)
+        won1.append(tournament.statistic['players'][0])
+        won2.append(tournament.statistic['players'][1])
+        remis.append(tournament.statistic['remis'])
+        print_stats(tournament.statistic['players'][0], tournament.statistic['players'][1],
+                    tournament.statistic['remis'], rounds)
         rl_player.model.save_weights(model_path)
-    print_loss(rl_player.loss)
+    print_diffs(won1, won2, remis)
 
 
-def print_stats(won_player_1, won_player_2, remis):
+def print_stats(won_player_1, won_player_2, remis, rounds):
     difference = won_player_1 - won_player_2
     print('-' * 180)
-    print("Difference: ", difference)
-    print("Player 1: ", won_player_1)
-    print("Player 2: ", won_player_2)
+    print("Difference: {0} ".format(difference))
+    print("Player 1: {0} / {1}".format(won_player_1, rounds))
+    print("Player 2: {0} / {1}".format(won_player_2, rounds))
     print("Remis: ", remis)
 
 
-def print_loss(player_loss):
+def print_diffs(won1, won2, remis):
     plt.figure()
-    epochs = range(1, len(player_loss) + 1)
-    plt.plot(epochs, player_loss)
-    plt.plot()
+    epochs = range(1, len(won1) + 1)
+    plt.plot(epochs, won1)
+    plt.plot(epochs, won2)
+    plt.plot(epochs, remis)
+    plt.legend(['Player 1', 'Player 2', 'Remis'], loc='upper left')
     plt.show()
 
 
 if __name__ == "__main__":
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    parser = argparse.ArgumentParser(description='SieberJassBot', )
+    parser = argparse.ArgumentParser(description='Tic-Tac-Toe Bot', )
     parser.add_argument('-l', '--log_dir', dest='log_dir', help='Tensorboard log directory')
     parser.add_argument('-e', '--nr_episodes', dest='nr_episodes', help='Number of episodes to play', type=int)
     parser.add_argument('-r', '--rounds', dest='rounds', help='Rounds to play of a tournament', type=int)

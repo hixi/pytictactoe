@@ -15,11 +15,12 @@ class RlPlayer(BasePlayer):
     def __init__(self, model_path, rounds=1500):
         super().__init__()
         self.rounds = rounds
-        self.memories = deque([], maxlen=5*self.rounds)
+        self.memories = deque([], maxlen=5 * self.rounds)
         self.model = build_model(model_path=model_path)
         self.model_t = build_model(model_path=model_path)
         self.gamma = 0.95  # discount rate
-        self.epsilon = 0.95  # exploration rate
+        #self.epsilon = 0.95  # exploration rate
+        self.epsilon = 0.995  # exploration rate
         self.current_state = None
         self.current_action = None
         self.loss = []
@@ -38,6 +39,8 @@ class RlPlayer(BasePlayer):
         self.memories.append((state, action, reward, next_state, done))
 
     def replay(self):
+        states = np.empty((0, 27))
+        targets = np.empty((0, 9))
         for state, action, reward, next_state, done in self.get_batch():
             state = np.expand_dims(state, axis=0)
             next_state = np.expand_dims(next_state, axis=0)
@@ -46,8 +49,10 @@ class RlPlayer(BasePlayer):
                 target = reward + self.gamma * np.amax(self.model_t.predict(next_state)[0])
             target_f = self.model_t.predict(state)
             target_f[0][action] = target
-            history = self.model.fit(state, target_f, epochs=1, verbose=0, callbacks=self.callbacks)
-            self.loss += history.history['loss']
+            states = np.vstack([states, state])
+            targets = np.vstack([targets, target_f])
+        history = self.model.fit(states, targets, epochs=4, verbose=0, callbacks=self.callbacks)
+        self.loss += history.history['loss']
         self.update_target()
 
     def choose_field(self, grid):
@@ -64,7 +69,7 @@ class RlPlayer(BasePlayer):
                 yield None
             else:
                 index += 1
-                self.penalty += -0.1
+                self.penalty = -0.2
 
     def after_decision(self, grid, game_state):
         done = True if game_state is not GameState.ONGOING else False
@@ -85,7 +90,7 @@ class RlPlayer(BasePlayer):
 
 def calculate_reward(game_state):
     if game_state == GameState.WON:
-        return 1.
+        return 1.0
     if game_state == GameState.LOST:
         return -1.
     if game_state == GameState.REMI:
