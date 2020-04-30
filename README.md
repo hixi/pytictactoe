@@ -16,7 +16,7 @@ cd pytictactoe
 pip install -r requirements.txt
 python setup.py install
 ```
-pyschieber officially supports Python 3.4, 3.5, 3.6, 3.7, 3.5-dev, 3.6-dev, 3.7-dev, nightly and PyPy3.
+pytictactoe officially supports Python 3.4, 3.5, 3.6, 3.7, 3.5-dev, 3.6-dev, 3.7-dev, nightly and PyPy3.
 
 ### CLI :computer:
 Beside of the API, pytictactoe provides a CLI client to play game.
