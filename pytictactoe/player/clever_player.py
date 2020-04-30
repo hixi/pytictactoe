@@ -46,13 +46,13 @@ def grid_to_list(grid):
 
 def is_win(board):
     for i in range(3):
-        if len(set(board[i * 3:i * 3 + 3])) is 1 and board[i * 3] is not '-': return True
+        if len(set(board[i * 3:i * 3 + 3])) == 1 and board[i * 3] != '-': return True
     for i in range(3):
-        if (board[i] is board[i + 3]) and (board[i] is board[i + 6]) and board[i] is not '-':
+        if (board[i] is board[i + 3]) and (board[i] is board[i + 6]) and board[i] != '-':
             return True
-    if board[0] is board[4] and board[4] is board[8] and board[4] is not '-':
+    if board[0] is board[4] and board[4] is board[8] and board[4] != '-':
         return True
-    if board[2] is board[4] and board[4] is board[6] and board[4] is not '-':
+    if board[2] is board[4] and board[4] is board[6] and board[4] != '-':
         return True
     return False
 
@@ -61,13 +61,13 @@ def next_move(board, player):
     if len(set(board)) == 1: return 0, 4
     next_player = 'X' if player == 'O' else 'O'
     if is_win(board):
-        if player is 'X':
+        if player == 'X':
             return -1, -1
         else:
             return 1, -1
     res_list = []  # list for appending the result
     c = board.count('-')
-    if c is 0:
+    if c == 0:
         return 0, -1
     _list = []  # list for storing the indexes where '-' appears
     for i in range(len(board)):
@@ -78,7 +78,7 @@ def next_move(board, player):
         ret, move = next_move(board, next_player)
         res_list.append(ret)
         board[i] = '-'
-    if player is 'X':
+    if player == 'X':
         max_ele = max(res_list)
         return max_ele, _list[res_list.index(max_ele)]
     else:
