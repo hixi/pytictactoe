@@ -1,12 +1,13 @@
 import pathlib
+import os
 import json
 from uuid import uuid4
 
-TMP_STORE_FOLDER = pathlib.Path('/tmp/')
+DATA_STORAGE_FOLDER = pathlib.Path(os.environ.get('DATA_STORAGE_FOLDER', '/tmp/'))
 
 
 def get_game_filepath(uuid):
-    return TMP_STORE_FOLDER / f"{str(uuid)}.json"
+    return DATA_STORAGE_FOLDER / f"{str(uuid)}.json"
 
 
 def create_game(settings):
@@ -22,7 +23,7 @@ def create_game(settings):
 
 
 def get_game(uuid):
-    game_config = TMP_STORE_FOLDER / f"{str(uuid)}.json"
+    game_config = get_game_filepath(uuid)
     with game_config.open('r') as json_file:
         json_result = json.loads(json_file.read())
     return json_result

@@ -2,10 +2,17 @@ version: "3.7"
 services:
   tic-tac-toe-api:
     image: geometalab/tic-tac-toe-api
+    command: ["uvicorn", "web_api.app:api", "--reload", "--port", "5000", "--host", "0.0.0.0"]
     build:
       context: ../
       dockerfile: docker/Dockerfile
+    environment:
+      DATA_STORAGE_FOLDER: "/results"
     volumes:
       - ../:/opt/pytictactoe
+      - results:/results
     ports:
       - "5000:5000"
+
+volumes:
+  results: null
