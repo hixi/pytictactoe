@@ -7,7 +7,7 @@ class CliPlayer(BasePlayer):
         print(grid)
         allowed = False
         while not allowed:
-            field = _choose_fiel_input()
+            field = _choose_field_input()
             allowed = yield field
             if allowed:
                 yield None
@@ -15,7 +15,7 @@ class CliPlayer(BasePlayer):
                 print("Try it again, field is already chosen.\n")
 
 
-def _choose_fiel_input():
+def _choose_field_input():
     x_index = _input_field('x')
     y_index = _input_field('y')
     return Field(x=x_index, y=y_index)

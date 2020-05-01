@@ -1,3 +1,4 @@
+-r requirements.txt
 pytest==5.4.1
 matplotlib==2.2.0
 Keras==2.1.4

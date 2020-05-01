@@ -1,14 +1,30 @@
+import json
+
 from pytictactoe.field import Field
 from pytictactoe.field_type import FieldType
 
+string_to_field_type = dict(
+    zip(["", 'X', 'O'], [FieldType.EMPTY, FieldType.X, FieldType.O]))
+field_type_to_string = dict(
+    zip([FieldType.EMPTY, FieldType.X, FieldType.O], ["", 'X', 'O']))
+
 
 class Grid:
-    def __init__(self):
-        self.fields = [
-            [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY],
-            [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY],
-            [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY]
-        ]
+    def __init__(self, grid_config=None):
+        if not grid_config:
+            self.fields = [
+                [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY],
+                [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY],
+                [FieldType.EMPTY, FieldType.EMPTY, FieldType.EMPTY]
+            ]
+        else:
+            self.fields = [
+                [
+                    string_to_field_type[field]
+                    for field in row
+                ]
+                for row in grid_config
+            ]
 
     def get_rows(self):
         return self.fields
@@ -44,6 +60,21 @@ class Grid:
                     empty_fields.append(Field(x=f, y=r))
         return empty_fields
 
+    def get_empty_cell_count(self):
+        return len(self.get_empty_fields())
+
+    def is_valid_move(self, field):
+        return self.fields[field.y][field.x] == FieldType.EMPTY
+
+    def to_string_lists(self):
+        return [
+            [
+                field_type_to_string[field]
+                for field in row
+            ]
+            for row in self.fields
+        ]
+
     def __str__(self):
         field_string = '\n    0   1   2\n'
         field_string += '  ' + '-' * 13 + '\n'
@@ -54,3 +85,11 @@ class Grid:
                 field_string += '| {} '.format(field_content)
             field_string += '|\n' + '  ' + '-' * 13 + '\n'
         return field_string
+
+
+class GridFieldEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, FieldType):
+            map_to_json = dict(zip(['EMPTY', 'X', 'O'], ["", 'X', 'O']))
+            return map_to_json[obj.name]
+        return json.JSONEncoder.default(self, obj)
