@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        .grid {
+            text-align: center;
+            margin: 0 auto;
+        }
+        .rowy {
+            clear: both;
+        }
+        .column {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 100px;
+            line-height: 100px;
+            display: inline-block;
+            border-left: 1px solid #000;
+            border-top: 1px solid #000;
+            user-select: none;
+        }
+        .column:hover {
+            cursor: pointer;
+        }
+        .column:last-child {
+            border-right: 1px solid #000;
+        }
+        .rowy:last-child .column {
+            border-bottom: 1px solid #000;
+        }
+    </style>
+
+    <title>Py-Tic-Tac-Toe Web API</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <h1>Py-Tic-Tac-Toe Web API</h1>
+
+            <div v-if="step === 1">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input v-model="username" type="text" class="form-control" :class="initialisationFormValidationClass" id="username" aria-describedby="usernameHelp" required>
+                    <small id="usernameHelp" class="form-text text-muted">Don't enter your real name.</small>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="selectAdversary">Select Adversary</label>
+                    <select class="form-control" id="selectAdversary" v-model="selectedAdversary">
+                        <option v-for="option in adversariesChoices" v-bind:value="option">{{ option.name }}</option>
+                    </select>
+                </div>
+                <button @click.prevent="startGame">Play</button>
+            </div>
+
+            <div v-if="step === 2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{username}} vs. {{selectedAdversary.name}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{username}} vs. {{selectedAdversary.name}}</h6>
+                                    <div class="card-body">
+                                        
+                                        <button v-show="!gameStarted" href="#" @click.prevent="makeAIMoveFirst" class="btn btn-info">Let computer go first</button>
+                                        <button v-show="gameStarted && !gameEnded" href="#" @click.prevent="restartGame" class="btn btn-danger">Reset</button>
+                                        <button v-show="gameStarted && gameEnded" href="#" @click.prevent="restartGame" class="btn btn-secondary">Play again!</button>
+
+                                        <span v-if="waiting">Waiting for AI to make his move</span>
+                                        <div v-if="gameEnded" class="alert alert-primary" role="alert">
+                                            {{ game.game.state }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div v-if="game" class="grid">
+                                <div class="rowy mx-auto" v-for="(row, row_index) in game.game.grid" :key="row_index">
+                                    <div class="column" v-for="(column, column_index) in row" v-on:click="tap" :data-row="row_index" :data-column="column_index" :key="column_index">
+                                        {{column}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    adversariesChoices: [],
+                    username: '',
+                    selectedAdversary: null,
+                    step: 1,
+                    initialisationFormValid: true,
+                    game: null,
+                    grid: null,
+                    waiting: false,
+                    gameStarted: false,
+                }
+            },
+            mounted() {
+                this.getAdversaries();
+            },
+            methods: {
+                restartGame() {
+                    this.game = null;
+                    this.grid = null;
+                    this.waiting = false;
+                    this.gameStarted = false;
+                    this.step = 1;
+                },
+                isFormValid() {
+                        if (this.username) {
+                            this.initialisationFormValid = true;
+                        } else {
+                            this.initialisationFormValid = false;
+                        }
+                    },
+                    startGame() {
+                        this.isFormValid()
+                        if (this.initialisationFormValid) {
+                            this.step = 2;
+                            console.log(this.selectedAdversary['start']);
+                            this.createGame()
+                        }
+                    },
+                    endGame() {
+                        this.step = 1;
+                    },
+                    getAdversaries() {
+                        axios.get('/api/adversaries')
+                            .then(response => {
+                                this.selectedAdversary = response.data[0];
+                                this.adversariesChoices = response.data;
+                            })
+                            .catch(function(error) {
+                                // TODO: Proper handle error
+                                console.error(error);
+                            });
+                    },
+                    createGame() {
+                        axios.post(this.selectedAdversary['start'], {
+                                'username': this.username,
+                                'adversary': this.selectedAdversary.id
+                            })
+                            .then(response => {
+                                this.game = response.data;
+                            })
+                            .catch(error => {
+                                // TODO: Proper handle error
+                                console.error(error);
+                            });
+                    },
+                    makeAIMoveFirst() {
+                        this.gameStarted = true;
+                        this.updateGame(null);
+                    },
+                    updateGame(move) {
+                        this.waiting = true;
+                        axios.post(this.game.move, {
+                                'move': move
+                            })
+                            .then(response => {
+                                this.game = response.data;
+                            })
+                            .catch(error => {
+                                // TODO: Proper handle error
+                                console.error(error);
+                            }).then(() => {
+                                this.waiting = false;
+                            });
+                    },
+                    tap: function(e) {
+                        if (e.target.innerText === "" && !this.waiting && !this.gameEnded) {
+                            this.gameStarted = true;
+                            const row = parseInt(e.target.attributes["data-row"].value)
+                            const column = parseInt(e.target.attributes["data-column"].value)
+                            this.updateGame({
+                                "x": column,
+                                "y": row
+                            })
+                            e.target.innerText = "X"
+                        }
+                    },
+            },
+            computed: {
+                initialisationFormValidationClass: function() {
+                    if (!this.initialisationFormValid) {
+                        return 'is-invalid';
+                    }
+                    return '';
+                },
+                gameEnded() {
+                    if (this.game && this.game.game) {
+                        return this.game.game.state !== 'ONGOING';
+                    }
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>
