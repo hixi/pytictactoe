@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  tic-tac-toe-api:
+    image: geometalab/tic-tac-toe-api
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/opt/pytictactoe
+    ports:
+      - "5000:5000"
