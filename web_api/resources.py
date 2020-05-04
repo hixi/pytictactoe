@@ -9,6 +9,7 @@ from reinforcement_learning.rl_player import RlPlayer
 from pytictactoe.player.defensive_player import DefensivePlayer
 from pytictactoe.player.clever_player import CleverPlayer
 from pytictactoe.player.web_player import WebAPIPlayer
+from pytictactoe.player.mini_max_player import MiniMaxPlayer
 from pytictactoe.tournament import Tournament
 from pytictactoe.game import Game
 from pytictactoe.grid import Grid
@@ -28,10 +29,15 @@ class RandomPlayer(BasePlayer):
 RL_WEIGHTS_PATH = Path(__file__).parent.parent / 'reinforcement_learning/weights'
 
 string_to_opponent = {
+    'mini-max': MiniMaxPlayer,
     'random-player': RandomPlayer,
     'reinformcent-learning-player': partial(
         RlPlayer, 
         model_path=(RL_WEIGHTS_PATH / 'rl_model_tictactoe.h5').absolute(),
+    ),
+    'reinformcent-learning-player-good': partial(
+        RlPlayer, 
+        model_path=(RL_WEIGHTS_PATH / 'rl_model_tictactoe_trained.h5').absolute(),
     ),
     'defensive-player': DefensivePlayer,
     'clever-player': CleverPlayer,
@@ -39,6 +45,11 @@ string_to_opponent = {
 
 
 opponents = [
+    {
+        'name': 'mini-max (almost perfect)',
+        'id': 'mini-max',
+        'description': 'hardest',
+    },
     {
         'name': 'Random Player (Dummy)',
         'id': 'random-player',
@@ -48,6 +59,11 @@ opponents = [
         'name': 'Reinforcement Learning Player',
         'id': 'reinformcent-learning-player',
         'description': 'still learning',
+    },
+    {
+        'name': 'Reinforcement Learning Player (trained)',
+        'id': 'reinformcent-learning-player-good',
+        'description': 'quite OK',
     },
     {
         'name': 'Defensive Player',
